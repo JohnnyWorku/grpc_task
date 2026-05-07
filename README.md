@@ -1,6 +1,6 @@
 # AI Inference Microservice Mesh
 
-This project is a high-performance, horizontally scalable AI Inference Microservice built using **gRPC** and **Python**. It integrates **Gemini 2.0 Flash** for real-time AI generation and utilizes **Nginx** for Layer 7 load balancing.
+This project is a high-performance, horizontally scalable AI Inference Microservice built using **gRPC** and **Python**. It integrates **Gemini** for real-time AI generation and utilizes **Nginx** for Layer 7 load balancing.
 
 ---
 
