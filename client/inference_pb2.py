@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0finference.proto\x12\x0c\x61i_inference\" \n\x10SentimentRequest\x12\x0c\n\x04text\x18\x01 \x01(\t\"6\n\x11SentimentResponse\x12\r\n\x05label\x18\x01 \x01(\t\x12\x12\n\nconfidence\x18\x02 \x01(\x02\"\x1f\n\rPromptRequest\x12\x0e\n\x06prompt\x18\x01 \x01(\t\"\x1e\n\rTokenResponse\x12\r\n\x05token\x18\x01 \x01(\t\"\x1d\n\rDocumentChunk\x12\x0c\n\x04text\x18\x01 \x01(\t\"\"\n\x0fSummaryResponse\x12\x0f\n\x07summary\x18\x01 \x01(\t\",\n\x0b\x43hatMessage\x12\x0c\n\x04role\x18\x02 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x03 \x01(\t2\xca\x02\n\x0b\x41IInference\x12S\n\x10\x41nalyzeSentiment\x12\x1e.ai_inference.SentimentRequest\x1a\x1f.ai_inference.SentimentResponse\x12H\n\nStreamChat\x12\x1b.ai_inference.PromptRequest\x1a\x1b.ai_inference.TokenResponse0\x01\x12Q\n\x11SummarizeDocument\x12\x1b.ai_inference.DocumentChunk\x1a\x1d.ai_inference.SummaryResponse(\x01\x12I\n\rLiveAssistant\x12\x19.ai_inference.ChatMessage\x1a\x19.ai_inference.ChatMessage(\x01\x30\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0finference.proto\x12\x0c\x61i_inference\" \n\x10SentimentRequest\x12\x0c\n\x04text\x18\x01 \x01(\t\"%\n\x11SentimentResponse\x12\x10\n\x08response\x18\x01 \x01(\t\"\x1f\n\rPromptRequest\x12\x0e\n\x06prompt\x18\x01 \x01(\t\"\x1e\n\rTokenResponse\x12\r\n\x05token\x18\x01 \x01(\t\"0\n\x08\x46ileInfo\x12\x11\n\tfile_name\x18\x01 \x01(\t\x12\x11\n\tfile_type\x18\x02 \x01(\t\"Y\n\x11UploadFileRequest\x12&\n\x04info\x18\x01 \x01(\x0b\x32\x16.ai_inference.FileInfoH\x00\x12\x14\n\nchunk_data\x18\x02 \x01(\x0cH\x00\x42\x06\n\x04\x64\x61ta\"%\n\x12UploadFileResponse\x12\x0f\n\x07summary\x18\x01 \x01(\t\",\n\x0b\x43hatMessage\x12\x0c\n\x04role\x18\x02 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x03 \x01(\t2\xd1\x02\n\x0b\x41IInference\x12S\n\x10\x41nalyzeSentiment\x12\x1e.ai_inference.SentimentRequest\x1a\x1f.ai_inference.SentimentResponse\x12H\n\nStreamChat\x12\x1b.ai_inference.PromptRequest\x1a\x1b.ai_inference.TokenResponse0\x01\x12X\n\x11SummarizeDocument\x12\x1f.ai_inference.UploadFileRequest\x1a .ai_inference.UploadFileResponse(\x01\x12I\n\rLiveAssistant\x12\x19.ai_inference.ChatMessage\x1a\x19.ai_inference.ChatMessage(\x01\x30\x01\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -34,17 +34,19 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_SENTIMENTREQUEST']._serialized_start=33
   _globals['_SENTIMENTREQUEST']._serialized_end=65
   _globals['_SENTIMENTRESPONSE']._serialized_start=67
-  _globals['_SENTIMENTRESPONSE']._serialized_end=121
-  _globals['_PROMPTREQUEST']._serialized_start=123
-  _globals['_PROMPTREQUEST']._serialized_end=154
-  _globals['_TOKENRESPONSE']._serialized_start=156
-  _globals['_TOKENRESPONSE']._serialized_end=186
-  _globals['_DOCUMENTCHUNK']._serialized_start=188
-  _globals['_DOCUMENTCHUNK']._serialized_end=217
-  _globals['_SUMMARYRESPONSE']._serialized_start=219
-  _globals['_SUMMARYRESPONSE']._serialized_end=253
-  _globals['_CHATMESSAGE']._serialized_start=255
-  _globals['_CHATMESSAGE']._serialized_end=299
-  _globals['_AIINFERENCE']._serialized_start=302
-  _globals['_AIINFERENCE']._serialized_end=632
+  _globals['_SENTIMENTRESPONSE']._serialized_end=104
+  _globals['_PROMPTREQUEST']._serialized_start=106
+  _globals['_PROMPTREQUEST']._serialized_end=137
+  _globals['_TOKENRESPONSE']._serialized_start=139
+  _globals['_TOKENRESPONSE']._serialized_end=169
+  _globals['_FILEINFO']._serialized_start=171
+  _globals['_FILEINFO']._serialized_end=219
+  _globals['_UPLOADFILEREQUEST']._serialized_start=221
+  _globals['_UPLOADFILEREQUEST']._serialized_end=310
+  _globals['_UPLOADFILERESPONSE']._serialized_start=312
+  _globals['_UPLOADFILERESPONSE']._serialized_end=349
+  _globals['_CHATMESSAGE']._serialized_start=351
+  _globals['_CHATMESSAGE']._serialized_end=395
+  _globals['_AIINFERENCE']._serialized_start=398
+  _globals['_AIINFERENCE']._serialized_end=735
 # @@protoc_insertion_point(module_scope)

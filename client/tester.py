@@ -19,32 +19,60 @@ def run_tests():
 
     print("--- Unary (Sentiment Analysis) ---")
     try:
-        # We set a 2.0s deadline as per bonus requirements
-        request = inference_pb2.SentimentRequest(text="This gRPC microservice is incredibly fast!")
-        response = stub.AnalyzeSentiment(request)#, timeout=2.0)
+        user_input = input("Enter your sentence for sentiment analysis: ")
+        request = inference_pb2.SentimentRequest(text=user_input)
+        response = stub.AnalyzeSentiment(request)
         print(f"Result: {response.label} | Confidence: {response.confidence}")
     except grpc.RpcError as e:
         print(f"Unary failed: {e.code()} - {e.details()}")
 
     print("\n--- Server Streaming (Chat Generation) ---")
-    prompt = inference_pb2.PromptRequest(prompt="Write a 1-sentence story.")
+    user_request = input("Ask any question like(eg: tell me a story or tell me a joke): ")
+    prompt = inference_pb2.PromptRequest(prompt=user_request)
+    print("\n")
     for token_resp in stub.StreamChat(prompt):
         print(f"{token_resp.token}", end="", flush=True)
     print("\n")
 
-    print("--- Task 4: Client Streaming (Batch Summarization) ---")
-    def generate_chunks():
-        messages = ["Chunk 1: AI is evolving. ", "Chunk 2: gRPC is efficient. ", "Chunk 3: Scale is key."]
-        for msg in messages:
-            yield inference_pb2.DocumentChunk(text=msg)
-    
-    summary = stub.SummarizeDocument(generate_chunks())
-    print(f"Final Summary: {summary.summary}")
+    print("--- Client Streaming (Batch Summarization) ---")
+    def generate_chunks(file_path, chunk_size=64 * 1024):
+        file_name = os.path.basename(file_path)
+        file_type = os.path.splitext(file_path)[1]
 
-    print("\n--- Task 5: Bidirectional Streaming (Live Chat) ---")
+        metadata = inference_pb2.FileInfo(
+            file_name=file_name,
+            file_type=file_type
+        )
+        
+        yield inference_pb2.UploadFileRequest(info=metadata)
+
+        # stream file
+        with open(file_path, "rb") as f:
+            while True:
+                chunk = f.read(chunk_size)
+                if not chunk:
+                    break
+
+                yield inference_pb2.UploadFileRequest(chunk_data=chunk)
+    
+    def summarize_document(stub, file_path):
+        iterator_request = generate_chunks(file_path)
+        
+        try:
+            response = stub.SummarizeDocument(iterator_request)
+            print("\n Summary:\n")
+            print(response.summary)
+
+        except grpc.RpcError as e:
+            print(f"Error: {e.code()} - {e.details()}")
+            
+    user_file_path_input = input("Enter the file path to summarize: ")
+    summarize_document(stub, user_file_path_input)
+
+    print("\n--- Bidirectional Streaming (Live Chat) ---")
     def chat_it():
         for i in range(3):
-            msg = f"Message {i+1}"
+            msg = "Are you doing well this time?"
             print(f"Sending: {msg}")
             yield inference_pb2.ChatMessage(role="user", content=msg)
             time.sleep(0.5)

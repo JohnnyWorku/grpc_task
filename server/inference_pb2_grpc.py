@@ -46,8 +46,8 @@ class AIInferenceStub(object):
                 _registered_method=True)
         self.SummarizeDocument = channel.stream_unary(
                 '/ai_inference.AIInference/SummarizeDocument',
-                request_serializer=inference__pb2.DocumentChunk.SerializeToString,
-                response_deserializer=inference__pb2.SummaryResponse.FromString,
+                request_serializer=inference__pb2.UploadFileRequest.SerializeToString,
+                response_deserializer=inference__pb2.UploadFileResponse.FromString,
                 _registered_method=True)
         self.LiveAssistant = channel.stream_stream(
                 '/ai_inference.AIInference/LiveAssistant',
@@ -102,8 +102,8 @@ def add_AIInferenceServicer_to_server(servicer, server):
             ),
             'SummarizeDocument': grpc.stream_unary_rpc_method_handler(
                     servicer.SummarizeDocument,
-                    request_deserializer=inference__pb2.DocumentChunk.FromString,
-                    response_serializer=inference__pb2.SummaryResponse.SerializeToString,
+                    request_deserializer=inference__pb2.UploadFileRequest.FromString,
+                    response_serializer=inference__pb2.UploadFileResponse.SerializeToString,
             ),
             'LiveAssistant': grpc.stream_stream_rpc_method_handler(
                     servicer.LiveAssistant,
@@ -190,8 +190,8 @@ class AIInference(object):
             request_iterator,
             target,
             '/ai_inference.AIInference/SummarizeDocument',
-            inference__pb2.DocumentChunk.SerializeToString,
-            inference__pb2.SummaryResponse.FromString,
+            inference__pb2.UploadFileRequest.SerializeToString,
+            inference__pb2.UploadFileResponse.FromString,
             options,
             channel_credentials,
             insecure,

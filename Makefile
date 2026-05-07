@@ -12,7 +12,7 @@ build:
 	sudo docker compose build --no-cache
 
 up:
-	sudo docker compose up
+	sudo docker compose up --build
 
 down:
 	sudo docker compose down

@@ -1,0 +1,16 @@
+Sample Document: Artificial Intelligence in Healthcare
+
+Artificial Intelligence (AI) is rapidly transforming the healthcare industry. It is being used to improve diagnosis accuracy, optimize treatment plans, and enhance patient care.
+
+One major application of AI in healthcare is medical imaging. Machine learning models can analyze X-rays, CT scans, and MRI images to detect diseases such as cancer, pneumonia, and brain tumors with high accuracy. In some cases, AI systems have performed as well as or better than human radiologists.
+
+Another important use of AI is predictive analytics. By analyzing large datasets from patient records, AI systems can predict disease outbreaks, patient readmission risks, and potential complications. This allows doctors to take preventive actions earlier.
+
+AI is also being used in drug discovery. Traditional drug development can take years, but AI can analyze chemical compounds and predict their effectiveness much faster. This reduces both time and cost in developing new medicines.
+
+Virtual health assistants powered by AI are becoming more common. These assistants can answer patient questions, schedule appointments, and provide basic medical advice. This helps reduce the workload on healthcare professionals.
+
+Despite its benefits, AI in healthcare also faces challenges. Data privacy is a major concern since medical data is highly sensitive. There are also concerns about bias in AI models, which may lead to unfair treatment outcomes if training data is not diverse.
+
+In conclusion, AI has the potential to revolutionize healthcare by making it faster, cheaper, and more accurate. However, careful regulation and ethical considerations are necessary to ensure safe and fair usage.
+

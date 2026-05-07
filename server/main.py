@@ -1,3 +1,5 @@
+import logging
+
 import grpc
 import time
 import os
@@ -17,10 +19,11 @@ model = genai.GenerativeModel(os.getenv("MODEL"))
 class AIInferenceService(inference_pb2_grpc.AIInferenceServicer):
     
     def AnalyzeSentiment(self, request, context):
-        prompt = f"Analyze the sentiment of the following text and return only two words: LABEL (POSITIVE/NEGATIVE/NEUTRAL) and a numerical confidence score between 0 and 1. Text: {request.text}"
+        prompt = f"Analyze the sentiment of the following text and return only two words: its LABEL (eg: POSITIVE/NEGATIVE/NEUTRAL) and a numerical confidence score between 0 and 1. Text: {request.text}"
+        
         response = model.generate_content(prompt)
-        # Simple parsing logic for the example
-        return inference_pb2.SentimentResponse(label="ANALYZED", confidence=0.85)
+        
+        return inference_pb2.SentimentResponse(response=response)
 
     def StreamChat(self, request, context):
         # We request a stream from the Gemini SDK
@@ -32,13 +35,40 @@ class AIInferenceService(inference_pb2_grpc.AIInferenceServicer):
                 yield inference_pb2.TokenResponse(token=chunk.text)
 
     def SummarizeDocument(self, request_iterator, context):
-        full_text = ""
-        for chunk in request_iterator:
-            full_text += chunk.text
+        file_data = bytearray()
+        file_name = ""
+
+        for request in request_iterator:
+            if request.HasField("info"):
+                file_name = request.info.file_name
+                logging.info(f"Receiving file: {file_name}")
+
+            elif request.HasField("chunk_data"):
+                file_data.extend(request.chunk_data)
+                logging.info(f"Got chunk size: {len(request.chunk_data)}")
+                
+        logging.info(f"Total bytes received: {len(file_data)}")
         
-        prompt = f"Summarize the following document concisely: {full_text}"
+        if len(file_data) == 0:
+            return inference_pb2.UploadFileResponse(
+                summary="ERROR: No file data received from client"
+            )
+
+        text = file_data.decode("utf-8", errors="ignore")
+
+        prompt = f"""
+        Summarize the following file content concisely:
+
+        {text}
+        """
+
         response = model.generate_content(prompt)
-        return inference_pb2.SummaryResponse(summary=response.text)
+        
+        summary = inference_pb2.UploadFileResponse(
+            summary=response.text
+        )
+
+        return summary
 
     def LiveAssistant(self, request_iterator, context):
         # Start a chat session to maintain history
