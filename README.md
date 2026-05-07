@@ -144,7 +144,6 @@ python client/tester.py
 
 Below are example outputs from running the test client against the microservice mesh:
 
-### Test Run 1
 ![Output 1](https://github.com/JohnnyWorku/grpc_task/raw/main/images/image_1.png)
 
 ![Output 2](https://github.com/JohnnyWorku/grpc_task/raw/main/images/image_2.png)
