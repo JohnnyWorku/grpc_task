@@ -79,6 +79,7 @@ def run_tests():
         user_input = input("You: ")
         
         if user_input.lower() in ["exit", "quit", "stop"]:
+            print("Good bye!")
             break
     
         def live_chat():
