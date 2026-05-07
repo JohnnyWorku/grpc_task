@@ -23,7 +23,9 @@ class AIInferenceService(inference_pb2_grpc.AIInferenceServicer):
         
         response = model.generate_content(prompt)
         
-        return inference_pb2.SentimentResponse(response=response)
+        ai_text = getattr(response, 'text', "Error: Could not generate sentiment.")
+        
+        return inference_pb2.SentimentResponse(response=ai_text)
 
     def StreamChat(self, request, context):
         # We request a stream from the Gemini SDK
@@ -37,22 +39,22 @@ class AIInferenceService(inference_pb2_grpc.AIInferenceServicer):
     def SummarizeDocument(self, request_iterator, context):
         file_data = bytearray()
         file_name = ""
-
+        
         for request in request_iterator:
-            if request.HasField("info"):
+            if request.info.file_name:
                 file_name = request.info.file_name
                 logging.info(f"Receiving file: {file_name}")
 
-            elif request.HasField("chunk_data"):
+            elif request.chunk_data:
                 file_data.extend(request.chunk_data)
                 logging.info(f"Got chunk size: {len(request.chunk_data)}")
-                
+        
+        
+        if not file_data:
+            return inference_pb2.UploadFileResponse(summary="Error: No data")
+            
         logging.info(f"Total bytes received: {len(file_data)}")
         
-        if len(file_data) == 0:
-            return inference_pb2.UploadFileResponse(
-                summary="ERROR: No file data received from client"
-            )
 
         text = file_data.decode("utf-8", errors="ignore")
 

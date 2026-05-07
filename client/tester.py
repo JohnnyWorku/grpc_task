@@ -22,7 +22,7 @@ def run_tests():
         user_input = input("Enter your sentence for sentiment analysis: ")
         request = inference_pb2.SentimentRequest(text=user_input)
         response = stub.AnalyzeSentiment(request)
-        print(f"Result: {response.label} | Confidence: {response.confidence}")
+        print(response)
     except grpc.RpcError as e:
         print(f"Unary failed: {e.code()} - {e.details()}")
 
@@ -56,6 +56,10 @@ def run_tests():
                 yield inference_pb2.UploadFileRequest(chunk_data=chunk)
     
     def summarize_document(stub, file_path):
+        if not os.path.exists(file_path):
+            print(f"Error: File {file_path} not found.")
+            return
+        
         iterator_request = generate_chunks(file_path)
         
         try:
