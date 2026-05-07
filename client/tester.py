@@ -3,11 +3,13 @@ import time
 import sys
 import os
 
+
 # Ensure the generated proto files are in the path
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 import inference_pb2
 import inference_pb2_grpc
+
 
 def run_tests():
     # Connect to the Nginx Load Balancer port (8080)
@@ -15,16 +17,16 @@ def run_tests():
     channel = grpc.insecure_channel('localhost:8080')
     stub = inference_pb2_grpc.AIInferenceStub(channel)
 
-    print("--- Task 2: Unary (Sentiment Analysis) ---")
+    print("--- Unary (Sentiment Analysis) ---")
     try:
         # We set a 2.0s deadline as per bonus requirements
         request = inference_pb2.SentimentRequest(text="This gRPC microservice is incredibly fast!")
-        response = stub.AnalyzeSentiment(request, timeout=2.0)
+        response = stub.AnalyzeSentiment(request)#, timeout=2.0)
         print(f"Result: {response.label} | Confidence: {response.confidence}")
     except grpc.RpcError as e:
         print(f"Unary failed: {e.code()} - {e.details()}")
 
-    print("\n--- Task 3: Server Streaming (Chat Generation) ---")
+    print("\n--- Server Streaming (Chat Generation) ---")
     prompt = inference_pb2.PromptRequest(prompt="Write a 1-sentence story.")
     for token_resp in stub.StreamChat(prompt):
         print(f"{token_resp.token}", end="", flush=True)

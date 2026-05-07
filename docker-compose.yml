@@ -3,14 +3,22 @@ services:
     build: ./server
     expose:
       - "50051"
+    env_file:
+      - .env
+      
   ai_server_2:
     build: ./server
     expose:
       - "50051"
+    env_file:
+      - .env
+
   ai_server_3:
     build: ./server
     expose:
       - "50051"
+    env_file:
+      - .env
 
   nginx:
     image: nginx:latest
