@@ -74,16 +74,25 @@ def run_tests():
     summarize_document(stub, user_file_path_input)
 
     print("\n--- Bidirectional Streaming (Live Chat) ---")
-    def chat_it():
-        for i in range(3):
-            msg = "Are you doing well this time?"
-            print(f"Sending: {msg}")
-            yield inference_pb2.ChatMessage(role="user", content=msg)
-            time.sleep(0.5)
+    
+    while True:
+        user_input = input("You: ")
+        
+        if user_input.lower() in ["exit", "quit", "stop"]:
+            break
+    
+        def live_chat():
+            yield inference_pb2.ChatMessage(role="user", content=user_input)
 
-    responses = stub.LiveAssistant(chat_it())
-    for resp in responses:
-        print(f"AI Response: {resp.content}")
+        responses = stub.LiveAssistant(live_chat())
+        
+        print(f"AI Response: ", end="", flush=True)
+        
+        for resp in responses:
+            print(resp.content, end="", flush=True)
+
+        print("\n")
+        
 
 if __name__ == '__main__':
     run_tests()

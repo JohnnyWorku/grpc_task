@@ -4,3 +4,4 @@ protobuf==5.29.6
 google-generativeai==0.8.5
 python-dotenv
 setuptools
+groq

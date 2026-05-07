@@ -5,6 +5,7 @@ import time
 import os
 from concurrent import futures
 import google.generativeai as genai
+from groq import Groq
 from dotenv import load_dotenv
 
 
@@ -13,28 +14,41 @@ import inference_pb2_grpc
 
 load_dotenv()
 
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel(os.getenv("MODEL"))
+# genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+model = os.getenv("GROQ_MODEL")
 
 class AIInferenceService(inference_pb2_grpc.AIInferenceServicer):
     
     def AnalyzeSentiment(self, request, context):
         prompt = f"Analyze the sentiment of the following text and return only two words: its LABEL (eg: POSITIVE/NEGATIVE/NEUTRAL) and a numerical confidence score between 0 and 1. Text: {request.text}"
         
-        response = model.generate_content(prompt)
+        response = client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "user", "content": prompt}
+            ]
+        )
         
-        ai_text = getattr(response, 'text', "Error: Could not generate sentiment.")
+        ai_text = response.choices[0].message.content
         
         return inference_pb2.SentimentResponse(response=ai_text)
 
     def StreamChat(self, request, context):
-        # We request a stream from the Gemini SDK
-        response = model.generate_content(request.prompt, stream=True)
         
-        for chunk in response:
-            if chunk.text:
-                # We yield each AI-generated chunk back as a gRPC token
-                yield inference_pb2.TokenResponse(token=chunk.text)
+        stream = client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "user", "content": request.prompt}
+            ],
+            stream=True
+        )
+        
+        for chunk in stream:
+            content = chunk.choices[0].delta.content
+            
+            if content:
+                yield inference_pb2.TokenResponse(token=content)
 
     def SummarizeDocument(self, request_iterator, context):
         file_data = bytearray()
@@ -64,20 +78,42 @@ class AIInferenceService(inference_pb2_grpc.AIInferenceServicer):
         {text}
         """
 
-        response = model.generate_content(prompt)
-        
-        summary = inference_pb2.UploadFileResponse(
-            summary=response.text
+        response = client.chat.completions.create(
+            model=model,
+            messages=[
+                {"role": "user", "content": prompt}
+            ]
         )
+        
+        summary = response.choices[0].message.content
 
-        return summary
+        return inference_pb2.UploadFileResponse(summary=summary)
 
     def LiveAssistant(self, request_iterator, context):
-        # Start a chat session to maintain history
-        chat = model.start_chat(history=[])
+        history = []
+
         for msg in request_iterator:
-            response = chat.send_message(msg.content)
-            yield inference_pb2.ChatMessage(role="assistant", content=response.text)
+            history.append({"role": "user", "content": msg.content})
+
+            stream = client.chat.completions.create(
+                model=model,
+                messages=history,
+                stream=True
+            )
+
+            assistant_message = ""
+
+            for chunk in stream:
+                content = chunk.choices[0].delta.content
+                if content:
+                    assistant_message += content
+                    yield inference_pb2.ChatMessage(
+                        role="assistant",
+                        content=content
+                    )
+
+            # save assistant response to history
+            history.append({"role": "assistant", "content": assistant_message})
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
