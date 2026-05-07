@@ -137,3 +137,15 @@ source venv/bin/activate
 # Execute the tester script to perform all 4 gRPC tasks
 python client/tester.py
 ```
+
+---
+
+## Output Examples
+
+Below are example outputs from running the test client against the microservice mesh:
+
+### Test Run 1
+![Output 1](https://github.com/JohnnyWorku/grpc_task/raw/main/images/image_1.png)
+
+### Test Run 2
+![Output 2](https://github.com/JohnnyWorku/grpc_task/raw/main/images/image_2.png)
