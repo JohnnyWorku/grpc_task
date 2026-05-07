@@ -147,5 +147,4 @@ Below are example outputs from running the test client against the microservice 
 ### Test Run 1
 ![Output 1](https://github.com/JohnnyWorku/grpc_task/raw/main/images/image_1.png)
 
-### Test Run 2
 ![Output 2](https://github.com/JohnnyWorku/grpc_task/raw/main/images/image_2.png)
